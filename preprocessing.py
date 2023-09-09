@@ -31,8 +31,8 @@ print("Shape of a CT image array:", ct_arrays[0].shape)
 # resizing the images
 target_size = (256, 256)  # Adjust as needed
 
-mri_resized = [image.resize(target_size) for image in mri_images]
-ct_resized = [image.resize(target_size) for image in ct_images]
+mri_resized = [image.resize(target_size).convert('L') for image in mri_images]
+ct_resized = [image.resize(target_size).convert('L') for image in ct_images]
 
 mri_arrays_resized = [np.array(image) for image in mri_resized]
 ct_arrays_resized = [np.array(image) for image in ct_resized]
