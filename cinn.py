@@ -92,7 +92,7 @@ for epoch in range(epochs):
 
 
 # After training, you can use the cINN model to perform translation
-input_mri = "Dataset/images/trainB/mri12.jpg"  # Load or generate an input MRI image for inference
+input_mri = "dataset/images/trainB/mri12.jpg"  # Load or generate an input MRI image for inference
 generated_ct = cinn(input_mri, direction=0)  # Perform MRI-to-CT translation
 
 # You can use or save the 'generated_ct' image as needed
