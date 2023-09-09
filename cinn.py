@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
-from preprocessing import train_loader
+from preprocessing import train_loader, train_dataset
 
 # Define the architecture for the shared encoder
 class SharedEncoder(nn.Module):
@@ -56,8 +56,8 @@ class ConditionalINN(nn.Module):
         return generated_image
 
 # Instantiate the cINN model
-final_image_size = 250# ...  # Set the image size after convolutions
-latent_dim = 250# ...  # Set the desired latent dimension
+final_image_size = 256 # ...  # Set the image size after convolutions
+latent_dim = 256 # ...  # Set the desired latent dimension
 cinn = ConditionalINN(final_image_size, latent_dim)
 
 # Define training loop
@@ -92,11 +92,26 @@ for epoch in range(epochs):
 
 
 # After training, you can use the cINN model to perform translation
-input_mri = ...  # Load or generate an input MRI image for inference
+input_mri = "Dataset/images/trainB/mri12.jpg"  # Load or generate an input MRI image for inference
 generated_ct = cinn(input_mri, direction=0)  # Perform MRI-to-CT translation
-# You can use or save the 'generated_ct' image as needed
 
-# Alternatively, for CT-to-MRI translation (direction=1)
-input_ct = ...  # Load or generate an input CT image for inference
-generated_mri = cinn(input_ct, direction=1)  # Perform CT-to-MRI translation
-# You can use or save the 'generated_mri' image as needed
+# You can use or save the 'generated_ct' image as needed
+# save the generated image in the new output folder
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
+from torchvision.utils import save_image
+
+# create the output folder
+output_folder = "output"
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+
+# save the generated image
+save_image(generated_ct, os.path.join(output_folder, "generated_ct.png"))
+
+# # Alternatively, for CT-to-MRI translation (direction=1)
+# input_ct = "Dataset/images/trainA/ct1.png"  # Load or generate an input CT image for inference
+# generated_mri = cinn(input_ct, direction=1)  # Perform CT-to-MRI translation
+# # You can use or save the 'generated_mri' image as needed

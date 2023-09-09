@@ -10,8 +10,8 @@ mri_dir = 'dataset/images/trainB/'
 ct_filenames = sorted(os.listdir(ct_dir))
 mri_filenames = sorted(os.listdir(mri_dir))
 
-print("fuck", ct_filenames)
-print("fuck", mri_filenames)
+print("CT-Scans", ct_filenames)
+print("MRI-Scans", mri_filenames)
 # Load MRI and CT images
 mri_images = [Image.open(os.path.join(mri_dir, filename)) for filename in mri_filenames]
 ct_images = [Image.open(os.path.join(ct_dir, filename)) for filename in ct_filenames]
@@ -65,6 +65,7 @@ print("Example paired data (MRI and CT):\n", paired_data[0])
 
 # splitting the data into train, validation and test sets
 from sklearn.model_selection import train_test_split
+
 # how to install sklearn.model selection: pip 
 train_data, val_test_data = train_test_split(paired_data, test_size=0.3, random_state=42)
 val_data, test_data = train_test_split(val_test_data, test_size=0.5, random_state=42)
@@ -91,7 +92,7 @@ class PairedImageDataset(Dataset):
         mri, ct = self.data[idx]
         return torch.tensor(mri, dtype=torch.float32), torch.tensor(ct, dtype=torch.float32)
 
-batch_size = 16  # Adjust as needed
+batch_size = 32  # Adjust as needed
 
 train_dataset = PairedImageDataset(train_data)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
