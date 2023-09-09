@@ -10,8 +10,8 @@ mri_dir = 'dataset/images/trainB/'
 ct_filenames = sorted(os.listdir(ct_dir))
 mri_filenames = sorted(os.listdir(mri_dir))
 
-print("CT-Scans", ct_filenames)
-print("MRI-Scans", mri_filenames)
+# print("CT-Scans", ct_filenames)
+# print("MRI-Scans", mri_filenames)
 # Load MRI and CT images
 mri_images = [Image.open(os.path.join(mri_dir, filename)) for filename in mri_filenames]
 ct_images = [Image.open(os.path.join(ct_dir, filename)) for filename in ct_filenames]
@@ -60,7 +60,7 @@ paired_data = list(zip(mri_normalized, ct_normalized))
 
 #########
 print("Number of paired data samples:", len(paired_data))
-print("Example paired data (MRI and CT):\n", paired_data[0])
+# print("Example paired data (MRI and CT):\n", paired_data[0])
 #########
 
 # splitting the data into train, validation and test sets
