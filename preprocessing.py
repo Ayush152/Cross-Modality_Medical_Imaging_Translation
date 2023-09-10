@@ -90,9 +90,75 @@ class PairedImageDataset(Dataset):
 
     def __getitem__(self, idx):
         mri, ct = self.data[idx]
-        return torch.tensor(mri, dtype=torch.float32), torch.tensor(ct, dtype=torch.float32)
+        return torch.tensor(mri, dtype=torch.float32).unsqueeze(0), torch.tensor(ct, dtype=torch.float32).unsqueeze(0)
 
 batch_size = 32  # Adjust as needed
 
 train_dataset = PairedImageDataset(train_data)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+
+
+# import os
+# import numpy as np
+# from PIL import Image
+# import torch
+# from torch.utils.data import Dataset, DataLoader, random_split
+# from torchvision import transforms
+
+# # Define the directory paths
+# ct_dir = 'dataset/images/trainA'
+# mri_dir = 'dataset/images/trainB'
+
+# # Define image transformations (including normalization)
+# data_transform = transforms.Compose([
+#     transforms.Resize((256, 256)),
+#     transforms.Grayscale(num_output_channels=1),  # Ensure images are grayscale
+#     transforms.ToTensor(),
+#     transforms.Normalize(mean=[0.5], std=[0.5])  # Adjust mean and std if needed
+# ])
+
+# # Create a custom dataset class
+# class PairedImageDataset(Dataset):
+#     def __init__(self, mri_dir, ct_dir, transform=None):
+#         self.mri_files = sorted(os.listdir(mri_dir))
+#         self.ct_files = sorted(os.listdir(ct_dir))
+#         self.mri_dir = mri_dir
+#         self.ct_dir = ct_dir
+#         self.transform = transform
+
+#     def __len__(self):
+#         return len(self.mri_files)  # Assuming MRI and CT have the same number of images
+
+#     def __getitem__(self, idx):
+#         mri_path = os.path.join(self.mri_dir, self.mri_files[idx])
+#         ct_path = os.path.join(self.ct_dir, self.ct_files[idx])
+
+#         mri_image = Image.open(mri_path)
+#         ct_image = Image.open(ct_path)
+
+#         if self.transform:
+#             mri_image = self.transform(mri_image)
+#             ct_image = self.transform(ct_image)
+
+#         return mri_image, ct_image
+
+# # Load and split the data
+# dataset = PairedImageDataset(mri_dir, ct_dir, transform=data_transform)
+
+# # Split the dataset into train, validation, and test sets
+# train_size = int(0.7 * len(dataset))
+# val_size = int(0.15 * len(dataset))
+# test_size = len(dataset) - train_size - val_size
+# train_dataset, val_dataset, test_dataset = random_split(dataset, [train_size, val_size, test_size])
+
+# print("Training dataset size:", len(train_dataset))
+# print("Validation dataset size:", len(val_dataset))
+# print("Test dataset size:", len(test_dataset))
+
+# # Create data loaders
+# batch_size = 32
+# num_workers = 4  # Number of CPU cores to use for data loading (adjust as needed)
+
+# train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+# val_loader = DataLoader(val_dataset, batch_size=batch_size, num_workers=num_workers)
+# test_loader = DataLoader(test_dataset, batch_size=batch_size, num_workers=num_workers)
