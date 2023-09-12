@@ -96,7 +96,8 @@ batch_size = 32  # Adjust as needed
 
 train_dataset = PairedImageDataset(train_data)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-
+val_dataset = PairedImageDataset(val_data)
+val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 
 # import os
 # import numpy as np
