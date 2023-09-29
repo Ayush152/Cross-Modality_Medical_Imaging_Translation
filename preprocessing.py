@@ -1,6 +1,15 @@
 from PIL import Image
 import numpy as np
 import os
+from albumentations import (
+    Compose,
+    RandomRotate90,
+    Flip,
+    Transpose,
+    ShiftScaleRotate,
+    RandomBrightnessContrast,
+    Normalize,
+)
 
 # Path to the directories
 ct_dir = 'dataset/images/trainA/'
@@ -28,12 +37,28 @@ print("Shape of an MRI image array:", mri_arrays[0].shape)
 print("Shape of a CT image array:", ct_arrays[0].shape)
 #######
 
-# resizing the images
-target_size = (256, 256)  # Adjust as needed
+# Define a data augmentation pipeline
+augmentation_transform = Compose([
+    RandomRotate90(),           # Randomly rotate by 90 degrees
+    Flip(),                     # Randomly flip horizontally and vertically
+    Transpose(),                # Randomly transpose the image
+    ShiftScaleRotate(shift_limit=0.1, scale_limit=0.2, rotate_limit=15, p=0.5),  # Randomly shift, scale, and rotate
+    RandomBrightnessContrast(),  # Randomly adjust brightness and contrast
+    Normalize(),                # Normalize pixel values (mean=0, std=1)
+])
 
-mri_resized = [image.resize(target_size).convert('L') for image in mri_images]
-ct_resized = [image.resize(target_size).convert('L') for image in ct_images]
+# Apply the augmentation pipeline to the images
+mri_augmented = [augmentation_transform(image=image)['image'] for image in mri_arrays]
+ct_augmented = [augmentation_transform(image=image)['image'] for image in ct_arrays]
 
+# Convert augmented images to PIL images
+mri_augmented = [Image.fromarray(image) for image in mri_augmented]
+ct_augmented = [Image.fromarray(image) for image in ct_augmented]
+
+mri_resized = [image.resize((256, 256)).convert('L') for image in mri_augmented]
+ct_resized = [image.resize((256, 256)).convert('L') for image in ct_augmented]
+
+# Convert resized images to NumPy arrays
 mri_arrays_resized = [np.array(image) for image in mri_resized]
 ct_arrays_resized = [np.array(image) for image in ct_resized]
 
